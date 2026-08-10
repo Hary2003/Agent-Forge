@@ -1,0 +1,42 @@
+# Example workflow: two independent agents (researcher, data_analyst) run in
+# parallel, then a writer agent merges both into a final report.
+#
+# Run with:
+#   python run.py --workflow workflows/research_report.yaml --task "Research the state of solid-state batteries and summarize the market outlook"
+
+name: research_report
+description: >
+  Researches a topic, optionally analyzes any attached data, then writes a
+  polished summary report combining both.
+
+nodes:
+  - id: researcher
+    role: researcher
+    goal: >
+      Investigate the task topic thoroughly. Produce a clear, well-organized
+      set of findings with key facts, figures, and any notable disagreements
+      in the sources.
+    inputs: []
+    tools: []
+    max_iterations: 4
+
+  - id: data_analyst
+    role: data_analyst
+    goal: >
+      If the task references any dataset or numbers, analyze them with
+      run_python and note the key quantitative takeaways. If there is no
+      data to analyze, briefly say so.
+    inputs: []
+    tools: [run_python, write_file]
+    max_iterations: 4
+
+  - id: writer
+    role: writer
+    goal: >
+      Combine the researcher's findings and the data analyst's takeaways
+      into a single well-structured report. Save the final report with
+      write_file as report.md, then summarize it in your final answer.
+    inputs: [researcher, data_analyst]
+    tools: [write_file]
+    required_tools: [write_file]
+    max_iterations: 4

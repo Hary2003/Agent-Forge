@@ -1,0 +1,18 @@
+[project]
+name = "agentforge"
+version = "0.1.0"
+description = "A lean, DAG-based multi-agent task orchestration framework, inspired by ChatDev/DevAll."
+requires-python = ">=3.10"
+dependencies = [
+    "groq",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
