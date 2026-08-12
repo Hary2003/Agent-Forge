@@ -1,9 +1,15 @@
 name: rag_research_workflow_self_test
-description: 'Self-test RAG flow against the AgentForge source collection.'
+description: Self-test RAG flow against the AgentForge source collection.
 nodes:
 - id: kb_retriever
   node_type: retrieval
+  role: ''
+  goal: ''
   inputs: []
+  tools: []
+  required_tools: []
+  model: null
+  max_iterations: 6
   config:
     collection_name: agentforge_self_test
     vector_store_type: chroma
@@ -13,23 +19,26 @@ nodes:
     top_k: 4
     rerank: true
     rerank_model: cross-encoder/ms-marco-MiniLM-L-6-v2
-
 - id: researcher
   node_type: agent
   role: researcher
-  goal: 'Review the retrieved AgentForge code context from kb_retriever and answer with concrete code specifics.'
+  goal: Review the retrieved AgentForge code context from kb_retriever and answer
+    with concrete code specifics.
   inputs:
   - kb_retriever
   tools: []
+  required_tools: []
   model: null
   max_iterations: 4
-
+  config: {}
 - id: writer
   node_type: agent
   role: writer
-  goal: 'Synthesize the researcher findings into a final response.'
+  goal: Synthesize the researcher findings into a final response.
   inputs:
   - researcher
   tools: []
+  required_tools: []
   model: null
   max_iterations: 4
+  config: {}
