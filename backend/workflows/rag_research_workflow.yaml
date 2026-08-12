@@ -1,0 +1,38 @@
+name: rag_research_workflow
+description: 'Demonstrates RAG flow: RetrievalNode embeds query, searches ChromaDB with cross-encoder reranking, and injects context into downstream LLM agent.'
+nodes:
+- id: kb_retriever
+  node_type: retrieval
+  inputs: []
+  config:
+    collection_name: agentforge_rag
+    vector_store_type: chroma
+    persist_directory: ./chroma_db
+    embedding_provider: bge
+    embedding_model: BAAI/bge-small-en-v1.5
+    top_k: 3
+    rerank: true
+    rerank_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+
+- id: researcher
+  node_type: agent
+  role: researcher
+  goal: 'Review the retrieved knowledge context from kb_retriever and summarize the core insights accurately.'
+  inputs:
+  - kb_retriever
+  tools: []
+  model: null
+  max_iterations: 4
+
+- id: writer
+  node_type: agent
+  role: writer
+  goal: 'Synthesize the researcher findings into a final response and save it as report.md.'
+  inputs:
+  - researcher
+  tools:
+  - write_file
+  required_tools:
+  - write_file
+  model: null
+  max_iterations: 4

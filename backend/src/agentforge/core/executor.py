@@ -135,9 +135,10 @@ class WorkflowExecutor:
                 error="Skipped because an upstream dependency failed.",
             )
         await _call_cb(on_node_start, node_cfg.id)
-        agent = Agent(node_cfg, self.llm, self.registry)
+        from agentforge.core.node import create_node
+        node = create_node(node_cfg, self.llm, self.registry)
         try:
-            return await agent.run(task_prompt, upstream, on_tool_call=on_tool_call)
+            return await node.run(task_prompt, upstream, on_tool_call=on_tool_call)
         except Exception as exc:  # noqa: BLE001 - keep failures in the workflow result
             return NodeResult(
                 node_id=node_cfg.id,

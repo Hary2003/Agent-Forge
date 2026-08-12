@@ -13,11 +13,12 @@ import asyncio
 from typing import Optional
 
 from agentforge.core.llm import LLMClient
+from agentforge.core.node import BaseNode
 from agentforge.core.schema import AgentNodeConfig, NodeResult, NodeStatus, ToolCall
 from agentforge.tools.registry import ToolRegistry, default_registry
 
 
-class Agent:
+class Agent(BaseNode):
     def __init__(
         self,
         config: AgentNodeConfig,

@@ -56,13 +56,15 @@ class NodeResult(BaseModel):
 class AgentNodeConfig(BaseModel):
     """One node in the workflow graph, as authored in YAML."""
     id: str
-    role: str                      # e.g. "researcher", "data_analyst", "writer"
-    goal: str                      # natural-language instructions for this agent
+    node_type: str = "agent"       # "agent", "retrieval", etc.
+    role: str = ""                 # e.g. "researcher", "data_analyst", "writer"
+    goal: str = ""                 # natural-language instructions for this agent
     inputs: list[str] = Field(default_factory=list)   # ids of upstream nodes
     tools: list[str] = Field(default_factory=list)    # names registered in tool registry
     required_tools: list[str] = Field(default_factory=list)  # tools that must be called >=1 time; enforced in code, see agent.py
     model: Optional[str] = None    # override default model for this node
     max_iterations: int = 6        # cap on tool-use loops before forcing a final answer
+    config: dict[str, Any] = Field(default_factory=dict)  # node-specific settings (e.g. vector store, top_k, rerank)
 
 
 class WorkflowConfig(BaseModel):
